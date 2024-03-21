@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 export default function AdminPanel(props) {
@@ -8,7 +9,7 @@ export default function AdminPanel(props) {
     const getProduct = async () => {
       try {
         const response = await fetch(
-          "http://localhost/shopserver/api/products.php"
+          "http://localhost:8081/shopserver/api/products.php"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch products");
@@ -28,6 +29,17 @@ export default function AdminPanel(props) {
     getProduct();
   }, []);
 
+  const handleDelete = async () => {
+    const response= await axios.delete("http://localhost:8081/shopserver/api/products.php",products.p_id);
+
+    if(response.success){
+      console.log("sUccess");
+    }
+    else{
+      console.log("error");
+    }
+  }
+
   return (
     <>
       {loading ? (
@@ -42,7 +54,7 @@ export default function AdminPanel(props) {
           >
             <div className="imgs">
               <img
-                src={`http://localhost/shopserver/images/${product.p_img}`}
+                src={`http://localhost:8081/shopserver/images/${product.p_img}`}
                 height={150}
                 width={180}
                 alt={product.p_name}
@@ -60,7 +72,9 @@ export default function AdminPanel(props) {
                
               </div>
                <div className="mb-3">
-                  <button className="btn btn-warning">Delete</button>
+                  <button onClick={()=>{
+                    handleDelete(product.p_id)
+                    }} className="btn btn-warning">Delete</button>
                 </div>
             </div>
           </div>
